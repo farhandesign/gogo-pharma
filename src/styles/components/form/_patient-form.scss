@@ -1,0 +1,17 @@
+.patient-form {
+    padding: 24px 56px;
+    width: 100%;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    row-gap: 32px;
+
+    .half-width-field__container {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        column-gap: 32px;
+        row-gap: 32px;
+    }
+}

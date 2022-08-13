@@ -1,0 +1,13 @@
+@use "../abstracts" as *;
+
+.layout {
+    background: $light-green;
+    width: 100%;
+    min-height: 101vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    overflow: hidden;
+}

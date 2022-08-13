@@ -1,0 +1,11 @@
+@use "../../abstracts" as *;
+
+.text-field__input {
+    position: relative;
+    .input-error-message {
+        position: absolute;
+        bottom: -18px;
+        color: $red;
+        font-size: 12px;
+    }
+}
