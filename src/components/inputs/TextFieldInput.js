@@ -52,28 +52,26 @@ const TextFieldInput = ({
     field, // { name, value, onChange, onBlur }
     form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
     form,
-    setfirstname,
-    setlastname,
     ...props
 }) => {
-    if (field.name === "first_name") {
-        if (field.value !== "") {
-            console.log("Field Value", field.value);
-            setfirstname(field.value);
-        }
-        if (field.value === "") {
-            setfirstname("New Referral");
-        }
-    }
-    if (field.name === "last_name") {
-        if (field.value !== "") {
-            console.log("Field Value", field.value);
-            setlastname(field.value);
-        }
-        if (field.value === "") {
-            setlastname("");
-        }
-    }
+    // if (field.name === "first_name") {
+    //     if (field.value !== "") {
+    //         console.log("Field Value", field.value);
+    //         setfirstname(field.value);
+    //     }
+    //     if (field.value === "") {
+    //         setfirstname("New Referral");
+    //     }
+    // }
+    // if (field.name === "last_name") {
+    //     if (field.value !== "") {
+    //         console.log("Field Value", field.value);
+    //         setlastname(field.value);
+    //     }
+    //     if (field.value === "") {
+    //         setlastname("");
+    //     }
+    // }
     return (
         <div className="text-field__input">
             <CustomTextField
@@ -85,7 +83,6 @@ const TextFieldInput = ({
                 type={props.type}
                 error={errors[field.name] && touched[field.name] && true}
                 id="outlined-error-helper-text"
-                // helperText={errors[field.name]}
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start" sx={{ color: "#B8C7CC" }}>

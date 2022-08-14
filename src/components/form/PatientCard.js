@@ -20,8 +20,10 @@ const getColor = (index) => {
 const PatientCard = ({ formRef, index, currentIndex, removePatient }) => {
     const [open, setOpen] = useState(true);
 
-    const [firstName, setFirstName] = useState("New Referral");
-    const [lastName, setLastName] = useState("");
+    const [patientName, setPatientName] = useState({
+        firstName: "",
+        lastName: "",
+    });
 
     useEffect(() => {
         console.log("Current Index", currentIndex);
@@ -41,9 +43,11 @@ const PatientCard = ({ formRef, index, currentIndex, removePatient }) => {
                 <div className="patient-number__indicator" style={{ background: `${getColor(index)}` }}>
                     <h1>{index + 1}</h1>
                 </div>
+
                 <div className="patient-name__indicator">
                     <h1>
-                        {firstName} {lastName}
+                        {patientName.firstName !== "" ? patientName.firstName : "New Referral"}{" "}
+                        {patientName.firstName !== "" && patientName.lastName}
                     </h1>
                 </div>
 
@@ -54,7 +58,7 @@ const PatientCard = ({ formRef, index, currentIndex, removePatient }) => {
             </div>
 
             <ExpandAnimation open={open}>
-                <PatientForm formRef={formRef} setFirstName={setFirstName} setLastName={setLastName} />
+                <PatientForm formRef={formRef} patientName={patientName} setPatientName={setPatientName} />
             </ExpandAnimation>
         </div>
     );
