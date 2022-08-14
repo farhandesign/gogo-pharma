@@ -23,35 +23,57 @@ const CustomTextField = styled(TextField)({
     },
 });
 
+const getIcon = (name) => {
+    const iconProps = {
+        fontSize: "16px",
+        color: "inherit",
+    };
+
+    if (name === "first_name" || name === "last_name") {
+        return <AccountCircle {...iconProps} />;
+    }
+    if (name === "date_of_birth") {
+        return <CakeIcon {...iconProps} />;
+    }
+    if (name === "contact_language") {
+        return <TranslateIcon {...iconProps} />;
+    }
+    if (name === "phone") {
+        return <PhoneIcon {...iconProps} />;
+    }
+    if (name === "email") {
+        return <EmailIcon {...iconProps} />;
+    }
+};
+
 const TextFieldInput = ({
     type,
     label,
     field, // { name, value, onChange, onBlur }
     form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
+    form,
+    setfirstname,
+    setlastname,
     ...props
 }) => {
-    const getIcon = (name) => {
-        const iconProps = {
-            fontSize: "16px",
-            color: "inherit",
-        };
-
-        if (name === "first_name" || name === "last_name") {
-            return <AccountCircle {...iconProps} />;
+    if (field.name === "first_name") {
+        if (field.value !== "") {
+            console.log("Field Value", field.value);
+            setfirstname(field.value);
         }
-        if (name === "date_of_birth") {
-            return <CakeIcon {...iconProps} />;
+        if (field.value === "") {
+            setfirstname("New Referral");
         }
-        if (name === "contact_language") {
-            return <TranslateIcon {...iconProps} />;
+    }
+    if (field.name === "last_name") {
+        if (field.value !== "") {
+            console.log("Field Value", field.value);
+            setlastname(field.value);
         }
-        if (name === "phone") {
-            return <PhoneIcon {...iconProps} />;
+        if (field.value === "") {
+            setlastname("");
         }
-        if (name === "email") {
-            return <EmailIcon {...iconProps} />;
-        }
-    };
+    }
     return (
         <div className="text-field__input">
             <CustomTextField

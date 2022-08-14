@@ -67,8 +67,14 @@
     opacity: 1 !important;
 }
 
-// ::-webkit-input-placeholder {
-//     background: -webkit-linear-gradient(left, #aaa 0%, #aaa 48%, red 48%, red 100%);
-//     -webkit-background-clip: text;
-//     -webkit-text-fill-color: transparent;
-// }
+.closed-card {
+    opacity: 0;
+    height: 0;
+    transition: opacity 0.2s linear, height 0.2s linear;
+}
+
+.open-card {
+    opacity: 1;
+    height: auto;
+    transition: opacity 0.2s linear, height 0.2s linear;
+}

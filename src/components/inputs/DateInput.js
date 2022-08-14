@@ -25,35 +25,40 @@ const CustomTextField = styled(TextField)({
 
 const DateInput = ({ field, form, ...other }) => {
     return (
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <MobileDatePicker
-                {...other}
-                inputFormat="yyyy/MM/dd"
-                disableFuture
-                name={field.name}
-                value={field.value}
-                onChange={(date) => form.setFieldValue(field.name, date.toISOString(), false)}
-                renderInput={(params) => (
-                    <CustomTextField
-                        error={form.errors[field.name] && form.touched[field.name] && true}
-                        fullWidth
-                        variant="standard"
-                        id="outlined-error-helper-text"
-                        // helperText="Date of Birth"
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start" sx={{ color: "#B8C7CC" }}>
-                                    <CakeIcon fontSize="16px" color="inherit" />
-                                </InputAdornment>
-                            ),
-                            ...params.inputProps,
-                            placeholder: "Date of Birth*",
-                        }}
-                    />
-                )}
-                // renderInput={(params) => <TextField {...params} />}
-            />
-        </LocalizationProvider>
+        <div className="text-field__input">
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <MobileDatePicker
+                    {...other}
+                    inputFormat="yyyy/MM/dd"
+                    disableFuture
+                    name={field.name}
+                    value={field.value}
+                    onChange={(date) => form.setFieldValue(field.name, date.toISOString(), false)}
+                    renderInput={(params) => (
+                        <CustomTextField
+                            error={form.errors[field.name] && form.touched[field.name] && true}
+                            fullWidth
+                            variant="standard"
+                            id="outlined-error-helper-text"
+                            // helperText="Date of Birth"
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start" sx={{ color: "#B8C7CC" }}>
+                                        <CakeIcon fontSize="16px" color="inherit" />
+                                    </InputAdornment>
+                                ),
+                                ...params.inputProps,
+                                placeholder: "Date of Birth*",
+                            }}
+                        />
+                    )}
+                    // renderInput={(params) => <TextField {...params} />}
+                />
+            </LocalizationProvider>
+            {form.touched[field.name] && form.errors[field.name] && (
+                <div className="input-error-message">{form.errors[field.name]}</div>
+            )}
+        </div>
     );
 };
 
