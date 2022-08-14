@@ -6,7 +6,7 @@ import TextFieldInput from "../inputs/TextFieldInput";
 import DateInput from "../inputs/DateInput";
 import AddressInput from "../inputs/AddressInput";
 
-const PatientForm = ({ formRef, setFirstName, setLastName }) => {
+const PatientForm = ({ formRef, setPatientName }) => {
     const handleSubmit = async (data, { resetForm }) => {
         axios
             .post(`https://formspree.io/f/xnqoyqel`, {
@@ -19,7 +19,6 @@ const PatientForm = ({ formRef, setFirstName, setLastName }) => {
                 // Handle error.
                 console.log(error.response);
             });
-
         resetForm();
     };
 
@@ -56,17 +55,27 @@ const PatientForm = ({ formRef, setFirstName, setLastName }) => {
                     <div className="half-width-field__container">
                         <Field
                             name="first_name"
-                            setfirstname={setFirstName}
                             component={TextFieldInput}
                             type="text"
                             placeholder="First Name*"
+                            onBlur={(e) => {
+                                setPatientName((patientName) => ({
+                                    ...patientName,
+                                    firstName: e.target.value,
+                                }));
+                            }}
                         />
                         <Field
                             name="last_name"
-                            setlastname={setLastName}
                             component={TextFieldInput}
                             type="text"
                             placeholder="Last Name*"
+                            onBlur={(e) => {
+                                setPatientName((patientName) => ({
+                                    ...patientName,
+                                    lastName: e.target.value,
+                                }));
+                            }}
                         />
                         {/* <Field name="date_of_birth" component={TextFieldInput} type="text" placeholder="Date of Birth*" /> */}
                         <Field name="date_of_birth" component={DateInput} />

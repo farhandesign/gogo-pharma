@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
+import usePlacesAutocomplete from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { useFormikContext } from "formik";
 import { styled } from "@mui/material/styles";
@@ -45,8 +45,6 @@ const AddressInput = ({
     const { setFieldValue } = useFormikContext();
 
     const ref = useOnclickOutside(() => {
-        // When user clicks outside of the component, we can dismiss
-        // the searched suggestions by calling this method
         clearSuggestions();
     });
 
@@ -66,12 +64,6 @@ const AddressInput = ({
             // by setting the second parameter to "false"
             setValue(description, false);
             clearSuggestions();
-
-            // Get latitude and longitude via utility functions
-            // getGeocode({ address: description }).then((results) => {
-            //     const { lat, lng } = getLatLng(results[0]);
-            //     console.log("Coordinates: ", { lat, lng });
-            // });
         };
 
     const renderSuggestions = () =>
@@ -102,9 +94,11 @@ const AddressInput = ({
                 onChange={handleInput}
                 disabled={!ready}
             />
-            {/* <input value={value} onChange={handleInput} disabled={!ready} placeholder="Where are you going?" /> */}
-            {/* We can use the "status" to decide whether we should display the dropdown or not */}
-            {status === "OK" && <div className="address-input-suggestions__container">{renderSuggestions()}</div>}
+
+            <div className="address-input-suggestions__anchor">
+                {status === "OK" && <div className="address-input-suggestions__container">{renderSuggestions()}</div>}
+            </div>
+
             {touched[field.name] && errors[field.name] && (
                 <div className="input-error-message">{errors[field.name]}</div>
             )}
