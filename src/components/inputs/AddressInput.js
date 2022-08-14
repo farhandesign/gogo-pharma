@@ -1,117 +1,115 @@
-import React, { useState } from "react";
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import React, { useEffect } from "react";
+import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
+import useOnclickOutside from "react-cool-onclickoutside";
+import { useFormikContext } from "formik";
+import { styled } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
 
-const AddressInput = () => {
-    const [address, setAddress] = useState("");
+const CustomTextField = styled(TextField)({
+    "& label.Mui-focused": {
+        color: "#3A719B",
+    },
+    "& .MuiInput-underline:after": {
+        borderBottomColor: "#3A719B",
+    },
 
-    const handleChange = (address) => {
-        setAddress(address);
+    "& .MuiInputBase-input": {
+        fontSize: 16,
+        borderColor: "#3A719B",
+        color: "#0B2B5B",
+        fontFamily: ["Montserrat", "sans-serif"].join(","),
+    },
+});
+
+const AddressInput = ({
+    type,
+    label,
+    field, // { name, value, onChange, onBlur }
+    form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
+    form,
+    ...props
+}) => {
+    const {
+        ready,
+        value,
+        suggestions: { status, data },
+        setValue,
+        clearSuggestions,
+    } = usePlacesAutocomplete({
+        requestOptions: {
+            /* Define search scope here */
+        },
+        debounce: 300,
+    });
+
+    const { setFieldValue } = useFormikContext();
+
+    const ref = useOnclickOutside(() => {
+        // When user clicks outside of the component, we can dismiss
+        // the searched suggestions by calling this method
+        clearSuggestions();
+    });
+
+    const handleInput = (e) => {
+        // Update the keyword of the input element
+        setValue(e.target.value);
     };
 
-    const handleSelect = (address) => {
-        geocodeByAddress(address)
-            .then((results) => getLatLng(results[0]))
-            .then((latLng) => console.log("Success", latLng))
-            .catch((error) => console.error("Error", error));
-    };
+    useEffect(() => {
+        setFieldValue(field.name, value);
+    }, [value]);
+
+    const handleSelect =
+        ({ description }) =>
+        () => {
+            // When user selects a place, we can replace the keyword without request data from API
+            // by setting the second parameter to "false"
+            setValue(description, false);
+            clearSuggestions();
+
+            // Get latitude and longitude via utility functions
+            // getGeocode({ address: description }).then((results) => {
+            //     const { lat, lng } = getLatLng(results[0]);
+            //     console.log("Coordinates: ", { lat, lng });
+            // });
+        };
+
+    const renderSuggestions = () =>
+        data.map((suggestion) => {
+            const {
+                place_id,
+                structured_formatting: { main_text, secondary_text },
+            } = suggestion;
+
+            return (
+                <div className="address-input-suggestion" key={place_id} onClick={handleSelect(suggestion)}>
+                    <strong>{main_text}</strong> <small>{secondary_text}</small>
+                </div>
+            );
+        });
 
     return (
-        <div>
-            <PlacesAutocomplete value={address} onChange={handleChange} onSelect={handleSelect}>
-                {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                    <div>
-                        <input
-                            {...getInputProps({
-                                placeholder: "Search Places ...",
-                                className: "location-search-input",
-                            })}
-                        />
-                        <div className="autocomplete-dropdown-container">
-                            {loading && <div>Loading...</div>}
-                            {suggestions.map((suggestion) => {
-                                const className = suggestion.active ? "suggestion-item--active" : "suggestion-item";
-                                // inline style for demonstration purpose
-                                const style = suggestion.active
-                                    ? { backgroundColor: "#fafafa", cursor: "pointer" }
-                                    : { backgroundColor: "#ffffff", cursor: "pointer" };
-                                return (
-                                    <div
-                                        {...getSuggestionItemProps(suggestion, {
-                                            className,
-                                            style,
-                                        })}
-                                    >
-                                        <span>{suggestion.description}</span>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
-            </PlacesAutocomplete>
+        <div ref={ref} className="address-input">
+            <CustomTextField
+                {...field}
+                {...props}
+                name={field.name}
+                error={errors[field.name] && touched[field.name] && true}
+                fullWidth
+                variant="standard"
+                type="text"
+                value={value}
+                onChange={handleInput}
+                disabled={!ready}
+            />
+            {/* <input value={value} onChange={handleInput} disabled={!ready} placeholder="Where are you going?" /> */}
+            {/* We can use the "status" to decide whether we should display the dropdown or not */}
+            {status === "OK" && <div className="address-input-suggestions__container">{renderSuggestions()}</div>}
+            {touched[field.name] && errors[field.name] && (
+                <div className="input-error-message">{errors[field.name]}</div>
+            )}
         </div>
     );
 };
 
 export default AddressInput;
-
-// class LocationSearchInput extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = { address: '' };
-//   }
-
-//   handleChange = address => {
-//     this.setState({ address });
-//   };
-
-//   handleSelect = address => {
-//     geocodeByAddress(address)
-//       .then(results => getLatLng(results[0]))
-//       .then(latLng => console.log('Success', latLng))
-//       .catch(error => console.error('Error', error));
-//   };
-
-//   render() {
-//     return (
-//       <PlacesAutocomplete
-//         value={this.state.address}
-//         onChange={this.handleChange}
-//         onSelect={this.handleSelect}
-//       >
-//         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-//           <div>
-//             <input
-//               {...getInputProps({
-//                 placeholder: 'Search Places ...',
-//                 className: 'location-search-input',
-//               })}
-//             />
-//             <div className="autocomplete-dropdown-container">
-//               {loading && <div>Loading...</div>}
-//               {suggestions.map(suggestion => {
-//                 const className = suggestion.active
-//                   ? 'suggestion-item--active'
-//                   : 'suggestion-item';
-//                 // inline style for demonstration purpose
-//                 const style = suggestion.active
-//                   ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-//                   : { backgroundColor: '#ffffff', cursor: 'pointer' };
-//                 return (
-//                   <div
-//                     {...getSuggestionItemProps(suggestion, {
-//                       className,
-//                       style,
-//                     })}
-//                   >
-//                     <span>{suggestion.description}</span>
-//                   </div>
-//                 );
-//               })}
-//             </div>
-//           </div>
-//         )}
-//       </PlacesAutocomplete>
-//     );
-//   }
-// }
