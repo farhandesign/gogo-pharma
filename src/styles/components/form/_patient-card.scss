@@ -81,15 +81,3 @@
     color: #3a719b !important;
     opacity: 1 !important;
 }
-
-.closed-card {
-    opacity: 0;
-    height: 0;
-    transition: opacity 0.2s linear, height 0.2s linear;
-}
-
-.open-card {
-    opacity: 1;
-    height: auto;
-    transition: opacity 0.2s linear, height 0.2s linear;
-}

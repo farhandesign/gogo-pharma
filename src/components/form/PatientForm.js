@@ -9,7 +9,7 @@ import AddressInput from "../inputs/AddressInput";
 const PatientForm = ({ formRef, removePatient, card, setPatientName, setSuccessMsg }) => {
     const handleSubmit = async (data, { resetForm }) => {
         axios
-            .post(`https://formspree.io/f/xnqoyqel`, {
+            .post(`${process.env.REACT_APP_FORM_LINK}`, {
                 data,
             })
             .then((response) => {
@@ -22,6 +22,7 @@ const PatientForm = ({ formRef, removePatient, card, setPatientName, setSuccessM
             .catch((error) => {
                 // Handle error.
                 console.log(error.response);
+                setSuccessMsg("Error");
             });
         resetForm();
     };
@@ -49,7 +50,7 @@ const PatientForm = ({ formRef, removePatient, card, setPatientName, setSuccessM
                     last_name: yup.string().required("Required"),
                     date_of_birth: yup.string().required("Required"),
                     contact_language: yup.string().required("Required"),
-                    phone: yup.string().required("Required"),
+                    phone: yup.number().typeError("Must be a number").required("Required"),
                     email: yup.string().email("Invalid email").required("Required"),
                     address: yup.string().required("Required"),
                     notes: yup.string(),
@@ -57,6 +58,7 @@ const PatientForm = ({ formRef, removePatient, card, setPatientName, setSuccessM
             >
                 <Form className="patient-form">
                     <div className="half-width-field__container">
+                        {/* Show patient Name on Card Header only onBlur to avoid bad state changes */}
                         <Field
                             name="first_name"
                             component={TextFieldInput}
@@ -81,7 +83,6 @@ const PatientForm = ({ formRef, removePatient, card, setPatientName, setSuccessM
                                 }));
                             }}
                         />
-                        {/* <Field name="date_of_birth" component={TextFieldInput} type="text" placeholder="Date of Birth*" /> */}
                         <Field name="date_of_birth" component={DateInput} />
                         <Field
                             name="contact_language"
@@ -92,9 +93,7 @@ const PatientForm = ({ formRef, removePatient, card, setPatientName, setSuccessM
                         <Field name="phone" component={TextFieldInput} type="text" placeholder="Phone*" />
                         <Field name="email" component={TextFieldInput} type="email" placeholder="Email*" />
                     </div>
-                    {/* <AddressInput /> */}
                     <Field name="address" component={AddressInput} type="text" placeholder="Addresss*" />
-                    {/* <Field name="address" component={TextFieldInput} type="text" placeholder="Addresss*" /> */}
                     <Field name="notes" component={TextFieldInput} type="text" placeholder="Notes/Reason" />
                 </Form>
             </Formik>

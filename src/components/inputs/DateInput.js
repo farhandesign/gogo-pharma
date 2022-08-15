@@ -40,7 +40,6 @@ const DateInput = ({ field, form, ...other }) => {
                             fullWidth
                             variant="standard"
                             id="outlined-error-helper-text"
-                            // helperText="Date of Birth"
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start" sx={{ color: "#B8C7CC" }}>
@@ -52,7 +51,6 @@ const DateInput = ({ field, form, ...other }) => {
                             }}
                         />
                     )}
-                    // renderInput={(params) => <TextField {...params} />}
                 />
             </LocalizationProvider>
             {form.touched[field.name] && form.errors[field.name] && (

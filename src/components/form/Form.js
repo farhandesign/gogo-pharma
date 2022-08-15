@@ -9,31 +9,16 @@ const Form = () => {
     const formRef4 = useRef();
     const formRef5 = useRef();
 
-    // const getRef = (index) => {
-    //     if (index === 0) {
-    //         return formRef1;
-    //     }
-    //     if (index === 1) {
-    //         return formRef2;
-    //     }
-    //     if (index === 2) {
-    //         return formRef3;
-    //     }
-    //     if (index === 3) {
-    //         return formRef4;
-    //     }
-    //     if (index === 4) {
-    //         return formRef5;
-    //     }
-    // };
-
-    // const [patients, setPatients] = useState(["1"]);
-
-    // const [currentOpen, setCurrentOpen] = useState(1);
-
     const [successMsg, setSuccessMsg] = useState([]);
 
-    const [nextToOpen, setNextToOpen] = useState("card2");
+    // Success Message
+    useEffect(() => {
+        if (successMsg.length > 0) {
+            setTimeout(function () {
+                setSuccessMsg([]);
+            }, 4500);
+        }
+    }, [successMsg]);
 
     const [cards, setCards] = useState({
         card1: true,
@@ -43,53 +28,31 @@ const Form = () => {
         card5: false,
     });
 
+    const [nextToOpen, setNextToOpen] = useState("card2");
+
     function getObjKey(obj) {
         return Object.keys(obj).find((key) => obj[key] === false);
     }
-
-    useEffect(() => {
-        if (successMsg.length > 0) {
-            setTimeout(function () {
-                setSuccessMsg([]);
-            }, 4000);
-        }
-    }, [successMsg]);
 
     // If All Forms Are Submitted Successfully Create a New Card
     useEffect(() => {
         const areTrue = Object.values(cards).reduce((a, item) => (a += item === true), 0);
         if (areTrue === 0) {
-            setCards((cards) => ({
-                ...cards,
-                card1: true,
-            }));
+            setTimeout(function () {
+                setCards((cards) => ({
+                    ...cards,
+                    card1: true,
+                }));
+            }, 500);
         }
     }, [cards]);
 
+    // Next Card to Add
     useEffect(() => {
-        // const areTrue = Object.values(cards).reduce((a, item) => (a += item === true), 0);
-        // setCurrentOpen(areTrue);
-        // console.log("True", areTrue);
-        // console.log("Current Open", currentOpen);
-
         setNextToOpen(getObjKey(cards));
     }, [cards]);
 
     const handleAddPatient = () => {
-        // if (patients.length < 5) {
-        //     setPatients((current) => [...current, "1"]);
-        //     setCurrentIndex(currentIndex + 1);
-        // }
-        // use cards .length instead of current Index
-
-        // if (currentOpen < 5) {
-        //     setCards((cards) => ({
-        //         ...cards,
-        //         [`card${currentOpen + 1}`]: true,
-        //     }));
-        //     setCurrentOpen(currentOpen + 1);
-        // }
-
         setCards((cards) => ({
             ...cards,
             [nextToOpen]: true,
@@ -97,12 +60,10 @@ const Form = () => {
     };
 
     const removePatient = (card) => {
-        // setPatients([...patients.slice(0, index), ...patients.slice(index + 1, patients.length)]);
         setCards((cards) => ({
             ...cards,
             [card]: false,
         }));
-        // setCurrentOpen(currentOpen - 1);
     };
 
     const handleSubmitOutside = () => {
@@ -126,23 +87,15 @@ const Form = () => {
     return (
         <Wrapper>
             <div className="form">
-                {/* {patients.map((card, index) => {
-                    return (
-                        <PatientCard
-                            formRef={getRef(index)}
-                            key={index}
-                            index={index}
-                            currentIndex={currentIndex}
-                            removePatient={removePatient}
-                        />
-                    );
-                })} */}
-
-                {successMsg && successMsg.length > 0 && (
+                {successMsg && successMsg.length > 0 && typeof successMsg === "object" && (
                     <div className="success-msg">
                         Success! You have submitted {successMsg.length} pending referrals. You will be notified once
                         they've been approved
                     </div>
+                )}
+
+                {successMsg && typeof successMsg === "string" && (
+                    <div className="success-msg error-msg-notification">Oops! there was an error. Please try again</div>
                 )}
 
                 <h1 className="title">Referral Patients</h1>

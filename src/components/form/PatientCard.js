@@ -27,14 +27,6 @@ const PatientCard = ({ card, formRef, index, removePatient, setSuccessMsg }) => 
         lastName: "",
     });
 
-    // useEffect(() => {
-    //     console.log("Current Index", currentIndex);
-    //     console.log("Index", index);
-    //     if (currentIndex !== index) {
-    //         setOpen(false);
-    //     }
-    // }, [currentIndex, index]);
-
     const handleOpen = () => {
         setOpen(!open);
     };
@@ -44,6 +36,7 @@ const PatientCard = ({ card, formRef, index, removePatient, setSuccessMsg }) => 
         window.scrollTo({ top: `${elDistanceToTop - margin}`, left: 0, behavior: "smooth" });
     };
 
+    // Auto Scroll To the Latest Card that is added
     useEffect(() => {
         let elem = document.getElementById(card);
         setTimeout(function () {
@@ -60,6 +53,7 @@ const PatientCard = ({ card, formRef, index, removePatient, setSuccessMsg }) => 
 
                 <div className="patient-name__indicator">
                     <h1>
+                        {/* Only Show Patient Name if First Name is present */}
                         {patientName.firstName !== "" ? patientName.firstName : "New Referral"}{" "}
                         {patientName.firstName !== "" && patientName.lastName}
                     </h1>
