@@ -66,6 +66,7 @@ const Form = () => {
         }));
     };
 
+    // All Forms that pass validation will be submitted while the ones that dont will stay behind
     const handleSubmitOutside = () => {
         if (formRef1.current) {
             formRef1.current.handleSubmit();
