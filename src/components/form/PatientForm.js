@@ -6,7 +6,7 @@ import TextFieldInput from "../inputs/TextFieldInput";
 import DateInput from "../inputs/DateInput";
 import AddressInput from "../inputs/AddressInput";
 
-const PatientForm = ({ formRef, setPatientName }) => {
+const PatientForm = ({ formRef, removePatient, card, setPatientName, setSuccessMsg }) => {
     const handleSubmit = async (data, { resetForm }) => {
         axios
             .post(`https://formspree.io/f/xnqoyqel`, {
@@ -14,6 +14,10 @@ const PatientForm = ({ formRef, setPatientName }) => {
             })
             .then((response) => {
                 console.log(response);
+                if (response.status === 200) {
+                    removePatient(card);
+                    setSuccessMsg((current) => [...current, "1"]);
+                }
             })
             .catch((error) => {
                 // Handle error.

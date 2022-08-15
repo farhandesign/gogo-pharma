@@ -47,6 +47,21 @@
     }
     .patient-card__actions-container {
         margin-left: auto;
+        button {
+            padding: 0;
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: $btn-icon-clr;
+            cursor: pointer;
+        }
+        button:last-child {
+            margin-left: 16px;
+            margin-right: 24px;
+        }
+        .expand-icon-rotate {
+            transform: rotate(180deg);
+        }
     }
 }
 
