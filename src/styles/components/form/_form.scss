@@ -3,9 +3,48 @@
 .form {
     margin-bottom: 60px;
     width: 100%;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    position: relative;
+
+    .success-msg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 16px 26px;
+        width: 100%;
+        min-height: 48px;
+        background: $green;
+        border-bottom-left-radius: 200px;
+        border-bottom-right-radius: 200px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: $medium;
+        color: #fff;
+    }
+    .error-msg-notification {
+        background: $red;
+    }
+
+    .title {
+        margin-top: 34px;
+        font-size: $h2;
+        font-weight: $medium;
+        color: $primary-text-clr;
+        text-align: center;
+    }
+
+    .sub-title {
+        margin-top: 8px;
+        margin-bottom: 32px;
+        font-size: $h2;
+        font-weight: $medium;
+        color: $primary-text-clr;
+        text-align: center;
+    }
 }
 
 .add-patient__btn {

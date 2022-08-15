@@ -1,4 +1,5 @@
 import Layout from "./components/Layout";
+import MainHeader from "./components/MainHeader";
 import Form from "./components/form/Form";
 import "./styles/index.scss";
 
@@ -6,7 +7,7 @@ function App() {
     return (
         <div className="App">
             <Layout>
-                <h1>GOGO</h1>
+                <MainHeader />
                 <Form />
             </Layout>
         </div>

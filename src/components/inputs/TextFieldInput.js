@@ -54,24 +54,6 @@ const TextFieldInput = ({
     form,
     ...props
 }) => {
-    // if (field.name === "first_name") {
-    //     if (field.value !== "") {
-    //         console.log("Field Value", field.value);
-    //         setfirstname(field.value);
-    //     }
-    //     if (field.value === "") {
-    //         setfirstname("New Referral");
-    //     }
-    // }
-    // if (field.name === "last_name") {
-    //     if (field.value !== "") {
-    //         console.log("Field Value", field.value);
-    //         setlastname(field.value);
-    //     }
-    //     if (field.value === "") {
-    //         setlastname("");
-    //     }
-    // }
     return (
         <div className="text-field__input">
             <CustomTextField
