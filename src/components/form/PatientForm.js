@@ -7,10 +7,22 @@ import DateInput from "../inputs/DateInput";
 import AddressInput from "../inputs/AddressInput";
 
 const PatientForm = ({ formRef, removePatient, card, setPatientName, setSuccessMsg }) => {
+    const formSpree = "https://formspree.io/f/xnqoyqel";
+
     const handleSubmit = async (data, { resetForm }) => {
+        console.log(data);
         axios
-            .post(`${process.env.REACT_APP_FORM_LINK}`, {
-                data,
+            .post(`${process.env.REACT_APP_API}/api/patients`, {
+                data: {
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                    date_of_birth: data.date_of_birth,
+                    contact_language: data.contact_language,
+                    phone: data.phone,
+                    email: data.email,
+                    address: data.address,
+                    notes: data.notes,
+                },
             })
             .then((response) => {
                 console.log(response);
@@ -21,7 +33,7 @@ const PatientForm = ({ formRef, removePatient, card, setPatientName, setSuccessM
             })
             .catch((error) => {
                 // Handle error.
-                console.log(error.response);
+                console.log(error);
                 setSuccessMsg("Error");
             });
         resetForm();
