@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 import Wrapper from "../Wrapper";
 import PatientCard from "./PatientCard";
 
@@ -34,6 +36,11 @@ const Form = () => {
         return Object.keys(obj).find((key) => obj[key] === false);
     }
 
+    // Next Card to Add
+    useEffect(() => {
+        setNextToOpen(getObjKey(cards));
+    }, [cards]);
+
     // If All Forms Are Submitted Successfully Create a New Card
     useEffect(() => {
         const areTrue = Object.values(cards).reduce((a, item) => (a += item === true), 0);
@@ -47,11 +54,6 @@ const Form = () => {
         }
     }, [cards]);
 
-    // Next Card to Add
-    useEffect(() => {
-        setNextToOpen(getObjKey(cards));
-    }, [cards]);
-
     const handleAddPatient = () => {
         setCards((cards) => ({
             ...cards,
@@ -59,11 +61,22 @@ const Form = () => {
         }));
     };
 
-    const removePatient = (card) => {
+    const removePatient = async (card, patientId) => {
         setCards((cards) => ({
             ...cards,
             [card]: false,
         }));
+
+        if (patientId) {
+            axios
+                .delete(`${process.env.REACT_APP_API}/api/patients/${patientId}`)
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     };
 
     // All Forms that pass validation will be submitted while the ones that dont will stay behind
@@ -88,6 +101,11 @@ const Form = () => {
     return (
         <Wrapper>
             <div className="form">
+                <div className="view-all-patients">
+                    <Link to="/all-patients" target="_blank" rel="noopener noreferrer">
+                        View all patients
+                    </Link>
+                </div>
                 {successMsg && successMsg.length > 0 && typeof successMsg === "object" && (
                     <div className="success-msg">
                         Success! You have submitted {successMsg.length} pending referrals. You will be notified once

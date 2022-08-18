@@ -27,13 +27,20 @@ const PatientCard = ({ card, formRef, index, removePatient, setSuccessMsg }) => 
         lastName: "",
     });
 
+    const [patientId, setPatientId] = useState(null);
+
     const handleOpen = () => {
         setOpen(!open);
     };
 
     const scrollToJustAbove = (element, margin = 136) => {
         const elDistanceToTop = window.pageYOffset + element.getBoundingClientRect().top;
-        window.scrollTo({ top: `${elDistanceToTop - margin}`, left: 0, behavior: "smooth" });
+
+        if (card === "card1") {
+            window.scrollTo({ top: `${elDistanceToTop - 500}`, left: 0, behavior: "smooth" });
+        } else {
+            window.scrollTo({ top: `${elDistanceToTop - margin}`, left: 0, behavior: "smooth" });
+        }
     };
 
     // Auto Scroll To the Latest Card that is added
@@ -41,7 +48,7 @@ const PatientCard = ({ card, formRef, index, removePatient, setSuccessMsg }) => 
         let elem = document.getElementById(card);
         setTimeout(function () {
             scrollToJustAbove(elem);
-        }, 300);
+        }, 100);
     }, [card]);
 
     return (
@@ -60,7 +67,7 @@ const PatientCard = ({ card, formRef, index, removePatient, setSuccessMsg }) => 
                 </div>
 
                 <div className="patient-card__actions-container">
-                    <button onClick={() => removePatient(card)}>
+                    <button onClick={() => removePatient(card, patientId)}>
                         <DeleteIcon fontSize="inherit" color="inherit" />
                     </button>
                     <button onClick={handleOpen}>
@@ -76,8 +83,9 @@ const PatientCard = ({ card, formRef, index, removePatient, setSuccessMsg }) => 
             <ExpandAnimation open={open}>
                 <PatientForm
                     formRef={formRef}
-                    card={card}
-                    removePatient={removePatient}
+                    setOpen={setOpen}
+                    patientId={patientId}
+                    setPatientId={setPatientId}
                     patientName={patientName}
                     setPatientName={setPatientName}
                     setSuccessMsg={setSuccessMsg}

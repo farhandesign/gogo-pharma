@@ -6,37 +6,76 @@ import TextFieldInput from "../inputs/TextFieldInput";
 import DateInput from "../inputs/DateInput";
 import AddressInput from "../inputs/AddressInput";
 
-const PatientForm = ({ formRef, removePatient, card, setPatientName, setSuccessMsg }) => {
-    const formSpree = "https://formspree.io/f/xnqoyqel";
+const PatientForm = ({ formRef, setOpen, patientId, setPatientId, setPatientName, setSuccessMsg }) => {
+    // const formSpree = "https://formspree.io/f/xnqoyqel";
 
-    const handleSubmit = async (data, { resetForm }) => {
-        console.log(data);
-        axios
-            .post(`${process.env.REACT_APP_API}/api/patients`, {
-                data: {
-                    first_name: data.first_name,
-                    last_name: data.last_name,
-                    date_of_birth: data.date_of_birth,
-                    contact_language: data.contact_language,
-                    phone: data.phone,
-                    email: data.email,
-                    address: data.address,
-                    notes: data.notes,
-                },
-            })
-            .then((response) => {
-                console.log(response);
-                if (response.status === 200) {
-                    removePatient(card);
-                    setSuccessMsg((current) => [...current, "1"]);
-                }
-            })
-            .catch((error) => {
-                // Handle error.
-                console.log(error);
-                setSuccessMsg("Error");
-            });
-        resetForm();
+    const handleSubmit = async (data, { resetForm, setFieldValue }) => {
+        // Post Req
+        if (!patientId) {
+            axios
+                .post(`${process.env.REACT_APP_API}/api/patients`, {
+                    data: {
+                        first_name: data.first_name,
+                        last_name: data.last_name,
+                        date_of_birth: data.date_of_birth,
+                        contact_language: data.contact_language,
+                        phone: data.phone,
+                        email: data.email,
+                        address: data.address,
+                        notes: data.notes,
+                    },
+                })
+                .then((response) => {
+                    console.log(response.data.data);
+                    if (response.status === 200) {
+                        setPatientId(response.data.data.id);
+                        setOpen(false);
+                        setSuccessMsg((current) => [...current, "1"]);
+
+                        let fieldValues = response.data.data.attributes;
+
+                        const keys = Object.keys(fieldValues);
+
+                        keys.forEach((key) => {
+                            setFieldValue(key, fieldValues[key]);
+                        });
+                    }
+                })
+                .catch((error) => {
+                    // Handle error.
+                    console.log(error);
+                    setSuccessMsg("Error");
+                });
+            resetForm();
+        }
+        // Edit Req
+        if (patientId) {
+            axios
+                .put(`${process.env.REACT_APP_API}/api/patients/${patientId}`, {
+                    data: {
+                        first_name: data.first_name,
+                        last_name: data.last_name,
+                        date_of_birth: data.date_of_birth,
+                        contact_language: data.contact_language,
+                        phone: data.phone,
+                        email: data.email,
+                        address: data.address,
+                        notes: data.notes,
+                    },
+                })
+                .then((response) => {
+                    console.log(response.data.data);
+                    if (response.status === 200) {
+                        setPatientId(response.data.data.id);
+                        setOpen(false);
+                    }
+                })
+                .catch((error) => {
+                    // Handle error.
+                    console.log(error);
+                    setSuccessMsg("Error");
+                });
+        }
     };
 
     return (
@@ -62,7 +101,7 @@ const PatientForm = ({ formRef, removePatient, card, setPatientName, setSuccessM
                     last_name: yup.string().required("Required"),
                     date_of_birth: yup.string().required("Required"),
                     contact_language: yup.string().required("Required"),
-                    phone: yup.number().typeError("Must be a number").required("Required"),
+                    phone: yup.string().required("Required"),
                     email: yup.string().email("Invalid email").required("Required"),
                     address: yup.string().required("Required"),
                     notes: yup.string(),
