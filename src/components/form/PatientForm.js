@@ -7,8 +7,6 @@ import DateInput from "../inputs/DateInput";
 import AddressInput from "../inputs/AddressInput";
 
 const PatientForm = ({ formRef, setOpen, patientId, setPatientId, setPatientName, setSuccessMsg }) => {
-    // const formSpree = "https://formspree.io/f/xnqoyqel";
-
     const handleSubmit = async (data, { resetForm, setFieldValue }) => {
         // Post Req
         if (!patientId) {
