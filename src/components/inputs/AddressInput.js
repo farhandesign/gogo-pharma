@@ -82,25 +82,31 @@ const AddressInput = ({
 
     return (
         <div ref={ref} className="address-input">
-            <CustomTextField
-                {...field}
-                {...props}
-                name={field.name}
-                error={errors[field.name] && touched[field.name] && true}
-                fullWidth
-                variant="standard"
-                type="text"
-                value={value}
-                onChange={handleInput}
-                disabled={!ready}
-            />
+            {ready && (
+                <>
+                    <CustomTextField
+                        {...field}
+                        {...props}
+                        name={field.name}
+                        error={errors[field.name] && touched[field.name] && true}
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        value={value}
+                        onChange={handleInput}
+                        disabled={!ready}
+                    />
 
-            <div className="address-input-suggestions__anchor">
-                {status === "OK" && <div className="address-input-suggestions__container">{renderSuggestions()}</div>}
-            </div>
+                    <div className="address-input-suggestions__anchor">
+                        {status === "OK" && (
+                            <div className="address-input-suggestions__container">{renderSuggestions()}</div>
+                        )}
+                    </div>
 
-            {touched[field.name] && errors[field.name] && (
-                <div className="input-error-message">{errors[field.name]}</div>
+                    {touched[field.name] && errors[field.name] && (
+                        <div className="input-error-message">{errors[field.name]}</div>
+                    )}
+                </>
             )}
         </div>
     );
