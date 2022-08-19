@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import usePlacesAutocomplete from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { useFormikContext } from "formik";
@@ -42,6 +42,19 @@ const AddressInput = ({
         debounce: 300,
     });
 
+    const [loaded, setLoaded] = useState(false);
+
+    // Wait for maps scrypt to load
+    useEffect(() => {
+        async function waitMaps() {
+            const maps = await window.google;
+            if (maps) {
+                setLoaded(true);
+            }
+        }
+        waitMaps();
+    }, [window.google]);
+
     const { setFieldValue } = useFormikContext();
 
     const ref = useOnclickOutside(() => {
@@ -82,31 +95,25 @@ const AddressInput = ({
 
     return (
         <div ref={ref} className="address-input">
-            {ready && (
-                <>
-                    <CustomTextField
-                        {...field}
-                        {...props}
-                        name={field.name}
-                        error={errors[field.name] && touched[field.name] && true}
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        value={value}
-                        onChange={handleInput}
-                        disabled={!ready}
-                    />
+            <CustomTextField
+                {...field}
+                {...props}
+                name={field.name}
+                error={errors[field.name] && touched[field.name] && true}
+                fullWidth
+                variant="standard"
+                type="text"
+                value={value}
+                onChange={handleInput}
+                disabled={!ready && !loaded}
+            />
 
-                    <div className="address-input-suggestions__anchor">
-                        {status === "OK" && (
-                            <div className="address-input-suggestions__container">{renderSuggestions()}</div>
-                        )}
-                    </div>
+            <div className="address-input-suggestions__anchor">
+                {status === "OK" && <div className="address-input-suggestions__container">{renderSuggestions()}</div>}
+            </div>
 
-                    {touched[field.name] && errors[field.name] && (
-                        <div className="input-error-message">{errors[field.name]}</div>
-                    )}
-                </>
+            {touched[field.name] && errors[field.name] && (
+                <div className="input-error-message">{errors[field.name]}</div>
             )}
         </div>
     );

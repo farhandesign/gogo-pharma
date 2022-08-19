@@ -19,7 +19,7 @@ const getColor = (index) => {
     }
 };
 
-const PatientCard = ({ card, formRef, index, removePatient, setSuccessMsg }) => {
+const PatientCard = ({ card, formRef, index, removePatient, setSuccessMsg, setEditMsg, setNotifications }) => {
     const [open, setOpen] = useState(true);
 
     const [patientName, setPatientName] = useState({
@@ -49,7 +49,7 @@ const PatientCard = ({ card, formRef, index, removePatient, setSuccessMsg }) => 
         setTimeout(function () {
             scrollToJustAbove(elem);
         }, 100);
-    }, [card]);
+    }, []);
 
     return (
         <div className="patient-card" id={card}>
@@ -88,7 +88,7 @@ const PatientCard = ({ card, formRef, index, removePatient, setSuccessMsg }) => 
                     setPatientId={setPatientId}
                     patientName={patientName}
                     setPatientName={setPatientName}
-                    setSuccessMsg={setSuccessMsg}
+                    setNotifications={setNotifications}
                 />
             </ExpandAnimation>
         </div>

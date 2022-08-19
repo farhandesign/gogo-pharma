@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Field, Form, Formik } from "formik";
 import * as yup from "yup";
+import _ from "lodash";
 import TextFieldInput from "../inputs/TextFieldInput";
 import DateInput from "../inputs/DateInput";
 import AddressInput from "../inputs/AddressInput";
 
-const PatientForm = ({ formRef, setOpen, patientId, setPatientId, setPatientName, setSuccessMsg }) => {
+const PatientForm = ({ formRef, setOpen, patientId, setPatientId, setPatientName, setNotifications }) => {
+    const [prevData, setPrevData] = useState(null);
+
     const handleSubmit = async (data, { resetForm, setFieldValue }) => {
         // Post Req
         if (!patientId) {
@@ -28,9 +31,15 @@ const PatientForm = ({ formRef, setOpen, patientId, setPatientId, setPatientName
                     if (response.status === 200) {
                         setPatientId(response.data.data.id);
                         setOpen(false);
-                        setSuccessMsg((current) => [...current, "1"]);
+
+                        setNotifications((current) => ({
+                            ...current,
+                            success: [...current.success, "1"],
+                        }));
 
                         let fieldValues = response.data.data.attributes;
+
+                        setPrevData(fieldValues);
 
                         const keys = Object.keys(fieldValues);
 
@@ -40,39 +49,52 @@ const PatientForm = ({ formRef, setOpen, patientId, setPatientId, setPatientName
                     }
                 })
                 .catch((error) => {
-                    // Handle error.
                     console.log(error);
-                    setSuccessMsg("Error");
+                    setNotifications((current) => ({
+                        ...current,
+                        success: "Error",
+                    }));
                 });
             resetForm();
         }
         // Edit Req
         if (patientId) {
-            axios
-                .put(`${process.env.REACT_APP_API}/api/patients/${patientId}`, {
-                    data: {
-                        first_name: data.first_name,
-                        last_name: data.last_name,
-                        date_of_birth: data.date_of_birth,
-                        contact_language: data.contact_language,
-                        phone: data.phone,
-                        email: data.email,
-                        address: data.address,
-                        notes: data.notes,
-                    },
-                })
-                .then((response) => {
-                    console.log(response.data.data);
-                    if (response.status === 200) {
-                        setPatientId(response.data.data.id);
-                        setOpen(false);
-                    }
-                })
-                .catch((error) => {
-                    // Handle error.
-                    console.log(error);
-                    setSuccessMsg("Error");
-                });
+            // Edit only if changes were made
+            if (!_.isEqual(data, prevData)) {
+                axios
+                    .put(`${process.env.REACT_APP_API}/api/patients/${patientId}`, {
+                        data: {
+                            first_name: data.first_name,
+                            last_name: data.last_name,
+                            date_of_birth: data.date_of_birth,
+                            contact_language: data.contact_language,
+                            phone: data.phone,
+                            email: data.email,
+                            address: data.address,
+                            notes: data.notes,
+                        },
+                    })
+                    .then((response) => {
+                        if (response.status === 200) {
+                            setPrevData(data);
+                            setPatientId(response.data.data.id);
+                            setOpen(false);
+
+                            setNotifications((current) => ({
+                                ...current,
+                                edits: [...current.edits, "1"],
+                            }));
+                        }
+                    })
+                    .catch((error) => {
+                        // Handle error.
+                        console.log(error);
+                        setNotifications((current) => ({
+                            ...current,
+                            edits: "Error",
+                        }));
+                    });
+            }
         }
     };
 

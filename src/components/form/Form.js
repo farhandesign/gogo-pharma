@@ -11,16 +11,22 @@ const Form = () => {
     const formRef4 = useRef();
     const formRef5 = useRef();
 
-    const [successMsg, setSuccessMsg] = useState([]);
+    // Submit Notifications
+    const [notifications, setNotifications] = useState({
+        success: [],
+        edits: [],
+    });
 
-    // Success Message
     useEffect(() => {
-        if (successMsg.length > 0) {
+        if (notifications.success.length > 0 || notifications.edits.length > 0) {
             setTimeout(function () {
-                setSuccessMsg([]);
-            }, 4500);
+                setNotifications({
+                    success: [],
+                    edits: [],
+                });
+            }, 5000);
         }
-    }, [successMsg]);
+    }, [notifications]);
 
     const [cards, setCards] = useState({
         card1: true,
@@ -106,16 +112,32 @@ const Form = () => {
                         View all patients
                     </Link>
                 </div>
-                {successMsg && successMsg.length > 0 && typeof successMsg === "object" && (
-                    <div className="success-msg">
-                        Success! You have submitted {successMsg.length} pending referrals. You will be notified once
-                        they've been approved
-                    </div>
-                )}
+                <div className="form-notifications">
+                    {notifications && notifications.success.length > 0 && typeof notifications.success === "object" && (
+                        <div className="success-msg">
+                            Success! You have submitted {notifications.success.length} pending referrals. You will be
+                            notified once they've been approved
+                        </div>
+                    )}
 
-                {successMsg && typeof successMsg === "string" && (
-                    <div className="success-msg error-msg-notification">Oops! there was an error. Please try again</div>
-                )}
+                    {notifications && notifications.edits.length > 0 && typeof notifications.edits === "object" && (
+                        <div className="success-msg edit-msg">
+                            Success! You have Successfully edited {notifications.edits.length} referrals.
+                        </div>
+                    )}
+
+                    {notifications.success && typeof notifications.success === "string" && (
+                        <div className="success-msg error-msg-notification">
+                            Oops! there was an error submitting referral. Please try again
+                        </div>
+                    )}
+
+                    {notifications.edits && typeof notifications.edits === "string" && (
+                        <div className="success-msg error-msg-notification">
+                            Oops! there was an error editing referral. Please try again
+                        </div>
+                    )}
+                </div>
 
                 <h1 className="title">Referral Patients</h1>
                 <h2 className="sub-title">You can add up to five patients at a time</h2>
@@ -126,7 +148,7 @@ const Form = () => {
                         card={"card1"}
                         index={0}
                         removePatient={removePatient}
-                        setSuccessMsg={setSuccessMsg}
+                        setNotifications={setNotifications}
                     />
                 )}
                 {cards.card2 && (
@@ -135,7 +157,7 @@ const Form = () => {
                         formRef={formRef2}
                         index={1}
                         removePatient={removePatient}
-                        setSuccessMsg={setSuccessMsg}
+                        setNotifications={setNotifications}
                     />
                 )}
                 {cards.card3 && (
@@ -144,7 +166,7 @@ const Form = () => {
                         formRef={formRef3}
                         index={2}
                         removePatient={removePatient}
-                        setSuccessMsg={setSuccessMsg}
+                        setNotifications={setNotifications}
                     />
                 )}
                 {cards.card4 && (
@@ -153,7 +175,7 @@ const Form = () => {
                         formRef={formRef4}
                         index={3}
                         removePatient={removePatient}
-                        setSuccessMsg={setSuccessMsg}
+                        setNotifications={setNotifications}
                     />
                 )}
                 {cards.card5 && (
@@ -162,7 +184,7 @@ const Form = () => {
                         formRef={formRef5}
                         index={4}
                         removePatient={removePatient}
-                        setSuccessMsg={setSuccessMsg}
+                        setNotifications={setNotifications}
                     />
                 )}
 
